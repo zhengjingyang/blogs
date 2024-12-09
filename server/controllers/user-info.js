@@ -1,5 +1,6 @@
 const userInfoService = require("../services/user-info");
 const userCode = require("../codes/user");
+const Joi = require("joi");
 
 module.exports = {
   /**
@@ -8,11 +9,19 @@ module.exports = {
    */
   async signIn(ctx) {
     let formData = ctx.request.body;
+    const schema = Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().min(6).required()
+    }).validate(formData);
+    if (schema.error) {
+      ctx.throw(400, schema.error.details[0].message);
+      return;
+    }
     let result = {
       success: false,
       message: "",
       data: null,
-      code: "",
+      code: ""
     };
 
     let userResult = await userInfoService.signIn(formData);
@@ -25,20 +34,11 @@ module.exports = {
         result.code = "FAIL_USER_NAME_OR_PASSWORD_ERROR";
       }
     } else {
-      (result.code = "FAIL_USER_NO_EXIST"),
-        (result.message = userCode.FAIL_USER_NO_EXIST);
+      (result.code = "FAIL_USER_NO_EXIST"), (result.message =
+        userCode.FAIL_USER_NO_EXIST);
     }
 
-    if (formData.source === "form" && result.success === true) {
-      let session = ctx.session;
-      session.isLogin = true;
-      session.userName = userResult.name;
-      session.userId = userResult.id;
-
-      ctx.redirect("/work");
-    } else {
-      ctx.body = result;
-    }
+    ctx.body = result;
   },
 
   /**
@@ -47,11 +47,20 @@ module.exports = {
    */
   async signUp(ctx) {
     let formData = ctx.request.body;
-    
+    const schema = Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().min(6).required(),
+      email: Joi.string().email().required()
+    }).validate(formData);
+    if (schema.error) {
+      ctx.throw(400, schema.error.details[0].message);
+      return;
+    }
+
     let result = {
       success: false,
       message: "",
-      data: null,
+      data: null
     };
 
     let validateResult = userInfoService.validatorSignUp(formData);
@@ -83,7 +92,7 @@ module.exports = {
       password: formData.password,
       name: formData.userName,
       create_time: new Date().getTime(),
-      level: 1,
+      level: 1
     });
 
     console.log(userResult);
@@ -111,7 +120,7 @@ module.exports = {
     let result = {
       success: false,
       message: "",
-      data: null,
+      data: null
     };
     if (isLogin === true && userName) {
       let userInfo = await userInfoService.getUserInfoByUserName(userName);
@@ -137,7 +146,7 @@ module.exports = {
       success: false,
       message: userCode.FAIL_USER_NO_LOGIN,
       data: null,
-      code: "FAIL_USER_NO_LOGIN",
+      code: "FAIL_USER_NO_LOGIN"
     };
     let session = ctx.session;
     if (session && session.isLogin === true) {
@@ -146,5 +155,5 @@ module.exports = {
       result.code = "";
     }
     return result;
-  },
+  }
 };

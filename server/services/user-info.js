@@ -65,29 +65,20 @@ const user = {
    * @param  {object} userInfo 用户注册数据
    * @return {object}          校验结果
    */
-  validatorSignUp(userInfo) {
+  async validatorSignUp(userInfo) {
     let result = {
       success: false,
       message: "",
     };
 
-    if (/[a-z0-9\_\-]{6,16}/.test(userInfo.userName) === false) {
-      result.message = userCode.ERROR_USER_NAME;
-      return result;
-    }
-    if (!validator.isEmail(userInfo.email)) {
-      result.message = userCode.ERROR_EMAIL;
-      return result;
-    }
-    if (!/[\w+]{6,16}/.test(userInfo.password)) {
-      result.message = userCode.ERROR_PASSWORD;
-      return result;
-    }
     if (userInfo.password !== userInfo.confirmPassword) {
       result.message = userCode.ERROR_PASSWORD_CONFORM;
       return result;
     }
 
+    let resultData = (await userModel.getExistOne(userName)) || {};
+    console.log(resultData, 'resultData');
+    
     result.success = true;
 
     return result;
