@@ -13,7 +13,7 @@ const json = require("koa-json"); // 用来格式化 JSON 响应数据
 const onerror = require("koa-onerror"); // 统一处理应用中的错误
 const routers = require("./routers/index");
 
-require('./utils/global')
+require("./utils/global");
 
 const app = new Koa();
 

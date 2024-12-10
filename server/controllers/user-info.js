@@ -1,6 +1,7 @@
 const userInfoService = require("../services/user-info");
 const userCode = require("../codes/user");
 const Joi = require("joi");
+const { createToken } = require("../utils/jwt");
 
 module.exports = {
   /**
@@ -25,17 +26,26 @@ module.exports = {
     };
 
     let userResult = await userInfoService.signIn(formData);
+    // console.log(userResult, "userResult");
 
     if (userResult) {
-      if (formData.userName === userResult.name) {
+      if (formData.username === userResult.username) {
         result.success = true;
+        result.message = userCode.SUCCESS_LOGIN;
+        delete userResult.password;
+        const token = await createToken({
+          username: userResult.username,
+          id: userResult.id,
+        });
+        result.data = { ...userResult, token };
+        result.code = 200;
       } else {
         result.message = userCode.FAIL_USER_NAME_OR_PASSWORD_ERROR;
         result.code = "FAIL_USER_NAME_OR_PASSWORD_ERROR";
       }
     } else {
-      (result.code = "FAIL_USER_NO_EXIST"),
-        (result.message = userCode.FAIL_USER_NO_EXIST);
+      result.code = "FAIL_USER_NAME_OR_PASSWORD_ERROR";
+      result.message = userCode.FAIL_USER_NAME_OR_PASSWORD_ERROR;
     }
 
     ctx.body = result;
@@ -64,7 +74,7 @@ module.exports = {
       data: null,
     };
 
-    let validateResult = await userInfoService.validatorSignUp(formData)
+    let validateResult = await userInfoService.validatorSignUp(formData);
     if (!validateResult.success) {
       result = validateResult;
       ctx.body = result;
@@ -94,19 +104,15 @@ module.exports = {
    * @param    {obejct} ctx 上下文对象
    */
   async getLoginUserInfo(ctx) {
-    let session = ctx.session;
-    let isLogin = session.isLogin;
-    let userName = session.userName;
-
-    console.log("session=", session);
+    let userObj = ctx.state.user.userInfo
 
     let result = {
       success: false,
       message: "",
       data: null,
     };
-    if (isLogin === true && userName) {
-      let userInfo = await userInfoService.getUserInfoByUserName(userName);
+    if (userObj) {
+      let userInfo = await userInfoService.getUserInfoByUserName(userObj.username);
       if (userInfo) {
         result.data = userInfo;
         result.success = true;
@@ -115,8 +121,8 @@ module.exports = {
       }
     } else {
       // TODO
-    }
-
+      result.message = userCode.FAIL_USER_NO_LOGIN;
+    }    
     ctx.body = result;
   },
 

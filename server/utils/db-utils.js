@@ -17,7 +17,7 @@ const pool = mysql.createPool({
 // 封装的查询函数
 let query = async function (sql, values) {
   try {
-    const [rows] = await pool.query(sql, values);
+    const [rows] = await pool.query(sql, values); 
     return rows;
   } catch (err) {
     throw err;

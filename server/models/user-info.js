@@ -36,12 +36,13 @@ const user = {
    * @param  {object} options 用户名密码对象
    * @return {object|null}         查找结果
    */
-  async getOneByUserNameAndPassword(options) {
+  async getOneByUserNameAndPassword(options) {    
     let _sql = `
     SELECT * from sys_user
-      where password="${options.password}" and name="${options.name}"
+      where password="${options.password}" and username="${options.username}"
       limit 1`;
     let result = await dbUtils.query(_sql);
+    
     if (Array.isArray(result) && result.length > 0) {
       result = result[0];
     } else {
@@ -59,11 +60,11 @@ const user = {
     let result = await dbUtils.select("sys_user", [
       "id",
       "email",
-      "name",
-      "detail_info",
-      "create_time",
-      "modified_time",
-      "modified_time",
+      "username",
+      "sex",
+      "remark",
+      "created_time",
+      "updated_time",
     ]);
     if (Array.isArray(result) && result.length > 0) {
       result = result[0];

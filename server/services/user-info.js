@@ -38,7 +38,7 @@ const user = {
   async signIn(formData) {
     let resultData = await userModel.getOneByUserNameAndPassword({
       password: formData.password,
-      name: formData.userName,
+      username: formData.username,
     });
     return resultData;
   },
@@ -51,11 +51,13 @@ const user = {
   async getUserInfoByUserName(userName) {
     let resultData = (await userModel.getUserInfoByUserName(userName)) || {};
     let userInfo = {
-      // id: resultData.id,
+      id: resultData.id,
       email: resultData.email,
-      userName: resultData.name,
-      detailInfo: resultData.detail_info,
-      createTime: resultData.create_time,
+      userName: resultData.username,
+      sex: resultData.sex,
+      remark: resultData.remark,
+      createdTime: resultData.created_time,
+      updatedTime: resultData.updated_time,
     };
     return userInfo;
   },

@@ -3,11 +3,11 @@
  */
 
 const router = require("koa-router")();
-const userInfoController = require("../controllers/user-info");
+const userController = require("../controllers/user-info");
+const { verifyToken } = require("../utils/jwt");
 
-const routers = router
-  .get("/getUserInfo", userInfoController.getLoginUserInfo)
-  .post("/signIn", userInfoController.signIn) // 登录操作
-  .post("/signUp", userInfoController.signUp); // 注册操作
+router.get("/getUserInfo", verifyToken(true), userController.getLoginUserInfo); // 获取用户信息
+router.post("/signIn", userController.signIn); // 登录操作
+router.post("/signUp", userController.signUp); // 注册操作
 
-module.exports = routers;
+module.exports = router;

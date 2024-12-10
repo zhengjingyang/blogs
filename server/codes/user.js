@@ -23,7 +23,8 @@ const userCode = {
 
   FAIL_USER_NO_EXIST: "用户不存在",
 
-  SUCCESS_REGISTERED: "用户注册成功"
+  SUCCESS_REGISTERED: "用户注册成功",
+  SUCCESS_LOGIN: "用户登录成功",
 };
 
 module.exports = userCode;
