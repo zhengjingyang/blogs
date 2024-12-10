@@ -8,13 +8,13 @@ const koaLogger = require("koa-logger");
 const session = require("koa-session-minimal"); // 可以在服务器端存储用户会话信息
 // const MysqlStore = require("koa-mysql-session");
 const RedisStore = require("koa-redis");
-
 const config = require("../config");
-
 const json = require("koa-json"); // 用来格式化 JSON 响应数据
 const onerror = require("koa-onerror"); // 统一处理应用中的错误
-
 const routers = require("./routers/index");
+
+require('./utils/global')
+
 const app = new Koa();
 
 // session存储配置

@@ -7,7 +7,7 @@ const user = {
    * @return {object}       mysql执行结果
    */
   async create(model) {
-    let result = await dbUtils.insertData("user_info", model);
+    let result = await dbUtils.insertData("sys_user", model);
     return result;
   },
 
@@ -16,10 +16,10 @@ const user = {
    * @param  {obejct} options 查找条件参数
    * @return {object|null}        查找结果
    */
-  async getExistOne(options) {
+  async getExistOne(options) {    
     let _sql = `
-    SELECT * from user_info
-      where email="${options.email}" or name="${options.name}"
+    SELECT * from sys_user
+      where username="${options.username}"
       limit 1`;
     let result = await dbUtils.query(_sql);
     if (Array.isArray(result) && result.length > 0) {
@@ -27,6 +27,7 @@ const user = {
     } else {
       result = null;
     }
+    
     return result;
   },
 
@@ -37,7 +38,7 @@ const user = {
    */
   async getOneByUserNameAndPassword(options) {
     let _sql = `
-    SELECT * from user_info
+    SELECT * from sys_user
       where password="${options.password}" and name="${options.name}"
       limit 1`;
     let result = await dbUtils.query(_sql);
@@ -55,7 +56,7 @@ const user = {
    * @return {object|null}     查找结果
    */
   async getUserInfoByUserName(userName) {
-    let result = await dbUtils.select("user_info", [
+    let result = await dbUtils.select("sys_user", [
       "id",
       "email",
       "name",

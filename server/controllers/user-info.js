@@ -11,7 +11,7 @@ module.exports = {
     let formData = ctx.request.body;
     const schema = Joi.object({
       username: Joi.string().required(),
-      password: Joi.string().min(6).required()
+      password: Joi.string().min(6).required(),
     }).validate(formData);
     if (schema.error) {
       ctx.throw(400, schema.error.details[0].message);
@@ -21,7 +21,7 @@ module.exports = {
       success: false,
       message: "",
       data: null,
-      code: ""
+      code: "",
     };
 
     let userResult = await userInfoService.signIn(formData);
@@ -34,8 +34,8 @@ module.exports = {
         result.code = "FAIL_USER_NAME_OR_PASSWORD_ERROR";
       }
     } else {
-      (result.code = "FAIL_USER_NO_EXIST"), (result.message =
-        userCode.FAIL_USER_NO_EXIST);
+      (result.code = "FAIL_USER_NO_EXIST"),
+        (result.message = userCode.FAIL_USER_NO_EXIST);
     }
 
     ctx.body = result;
@@ -50,7 +50,8 @@ module.exports = {
     const schema = Joi.object({
       username: Joi.string().required(),
       password: Joi.string().min(6).required(),
-      email: Joi.string().email().required()
+      confirmPassword: Joi.string().min(6).required(),
+      email: Joi.string().email().required(),
     }).validate(formData);
     if (schema.error) {
       ctx.throw(400, schema.error.details[0].message);
@@ -60,45 +61,27 @@ module.exports = {
     let result = {
       success: false,
       message: "",
-      data: null
+      data: null,
     };
 
-    let validateResult = userInfoService.validatorSignUp(formData);
-
-    if (validateResult.success === false) {
+    let validateResult = await userInfoService.validatorSignUp(formData)
+    if (!validateResult.success) {
       result = validateResult;
       ctx.body = result;
       return;
     }
 
-    let existOne = await userInfoService.getExistOne(formData);
-    console.log(existOne);
-
-    if (existOne) {
-      if (existOne.name === formData.userName) {
-        result.message = userCode.FAIL_USER_NAME_IS_EXIST;
-        ctx.body = result;
-        return;
-      }
-      if (existOne.email === formData.email) {
-        result.message = userCode.FAIL_EMAIL_IS_EXIST;
-        ctx.body = result;
-        return;
-      }
-    }
-
     let userResult = await userInfoService.create({
       email: formData.email,
       password: formData.password,
-      name: formData.userName,
-      create_time: new Date().getTime(),
-      level: 1
+      username: formData.username,
+      created_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      updated_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     });
-
-    console.log(userResult);
 
     if (userResult && userResult.insertId * 1 > 0) {
       result.success = true;
+      result.message = userCode.SUCCESS_REGISTERED;
     } else {
       result.message = userCode.ERROR_SYS;
     }
@@ -120,7 +103,7 @@ module.exports = {
     let result = {
       success: false,
       message: "",
-      data: null
+      data: null,
     };
     if (isLogin === true && userName) {
       let userInfo = await userInfoService.getUserInfoByUserName(userName);
@@ -146,7 +129,7 @@ module.exports = {
       success: false,
       message: userCode.FAIL_USER_NO_LOGIN,
       data: null,
-      code: "FAIL_USER_NO_LOGIN"
+      code: "FAIL_USER_NO_LOGIN",
     };
     let session = ctx.session;
     if (session && session.isLogin === true) {
@@ -155,5 +138,5 @@ module.exports = {
       result.code = "";
     }
     return result;
-  }
+  },
 };

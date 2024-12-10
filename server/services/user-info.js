@@ -76,10 +76,13 @@ const user = {
       return result;
     }
 
-    let resultData = (await userModel.getExistOne(userName)) || {};
-    console.log(resultData, 'resultData');
-    
-    result.success = true;
+    let resultData = (await userModel.getExistOne(userInfo)) || {};
+    if (resultData && resultData.id) {
+      result.success = false;
+      result.message = userCode.FAIL_USER_NAME_IS_EXIST
+    } else {
+      result.success = true;
+    }
 
     return result;
   },
