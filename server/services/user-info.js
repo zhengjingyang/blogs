@@ -1,8 +1,6 @@
 /**
  * 用户业务操作
  */
-
-const validator = require("validator"); // 提供字符串验证和清理功能
 const userModel = require("./../models/user-info");
 const userCode = require("./../codes/user");
 
