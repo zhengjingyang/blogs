@@ -16,8 +16,10 @@ const pool = mysql.createPool({
 
 // 封装的查询函数
 let query = async function (sql, values) {
+  console.log(sql, values);
+
   try {
-    const [rows] = await pool.query(sql, values); 
+    const [rows] = await pool.query(sql, values);
     return rows;
   } catch (err) {
     throw err;
@@ -36,10 +38,88 @@ let findDataById = function (table, id) {
 };
 
 // 分页查询数据
-let findDataByPage = function (table, keys, start, end) {
-  let _sql = "SELECT ?? FROM ?? LIMIT ?, ?";
-  return query(_sql, [keys, table, start, end]);
+// let findDataByPage = function (table, keys, start, end) {
+//   let _sql = "SELECT ?? FROM ?? WHERE del_flag != 1 LIMIT ?, ?";
+//   return query(_sql, [keys, table, start, end]);
+// };
+let findDataByPage = function (
+  table,
+  keys,
+  start,
+  end,
+  conditions,
+  startTime,
+  endTime
+) {
+  let conditionStr = "";
+  let conditionValues = [];
+
+  // 动态生成 WHERE 子句
+  if (conditions && Object.keys(conditions).length > 0) {
+    conditionStr =
+      "WHERE " +
+      Object.keys(conditions)
+        .map((key) => {
+          conditionValues.push(conditions[key]);
+          return `${key} = ?`;
+        })
+        .join(" AND ");
+  }
+
+  // 添加时间筛选条件
+  if (startTime && endTime) {
+    if (conditionStr) {
+      conditionStr += " AND created_time BETWEEN ? AND ?";
+    } else {
+      conditionStr = "WHERE created_time BETWEEN ? AND ?";
+    }
+    conditionValues.push(startTime, endTime);
+  }
+
+  // 确保默认 del_flag 不为 1
+  if (conditionStr) {
+    conditionStr += " AND del_flag != 1";
+  } else {
+    conditionStr = "WHERE del_flag != 1";
+  }
+
+  // 检查 keys 是否为 '*'
+  let selectKeys = keys === "*" ? "*" : "??";
+
+  let _sql = `SELECT ${selectKeys} FROM ?? ${conditionStr} LIMIT ?, ?`;
+
+  // 参数数组，包含 keys（如果不是 '*'）、table、筛选条件值、分页起始值和结束值
+  let params =
+    keys === "*"
+      ? [table, ...conditionValues, start, end]
+      : [keys, table, ...conditionValues, start, end];
+
+  let list = query(_sql, params);
+  let count_sql = `SELECT COUNT(*) AS total_count FROM ?? ${conditionStr} LIMIT ?, ?`;
+  let count = query(count_sql, [table, ...conditionValues, start, end]);
+  console.log(list, count);
+  
+  return {};
 };
+
+// 使用示例
+// let page = 1;
+// let limit = 10;
+// let start = (page - 1) * limit;
+// let end = limit;
+// let conditions = { type: 1, read_num: 0 }; // 示例筛选条件
+// let startTime = "2024-12-01 00:00:00";
+// let endTime = "2024-12-31 23:59:59";
+
+// findDataByPage("articles", "*", start, end, conditions, startTime, endTime)
+//   .then((data) => {
+//     // 处理查询结果
+//     console.log(data);
+//   })
+//   .catch((err) => {
+//     // 处理错误
+//     console.error(err);
+//   });
 
 // 插入数据
 let insertData = function (table, values) {
