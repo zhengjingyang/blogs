@@ -42,7 +42,7 @@ let findDataById = function (table, id) {
 //   let _sql = "SELECT ?? FROM ?? WHERE del_flag != 1 LIMIT ?, ?";
 //   return query(_sql, [keys, table, start, end]);
 // };
-let findDataByPage = function (
+let findDataByPage = async function (
   table,
   keys,
   start,
@@ -89,17 +89,23 @@ let findDataByPage = function (
   let _sql = `SELECT ${selectKeys} FROM ?? ${conditionStr} LIMIT ?, ?`;
 
   // 参数数组，包含 keys（如果不是 '*'）、table、筛选条件值、分页起始值和结束值
-  let params =
+  let listParams =
     keys === "*"
       ? [table, ...conditionValues, start, end]
       : [keys, table, ...conditionValues, start, end];
 
-  let list = query(_sql, params);
-  let count_sql = `SELECT COUNT(*) AS total_count FROM ?? ${conditionStr} LIMIT ?, ?`;
-  let count = query(count_sql, [table, ...conditionValues, start, end]);
-  console.log(list, count);
-  
-  return {};
+  let list = await query(_sql, listParams);
+
+  // 查询总记录数
+  let count_sql = `SELECT COUNT(*) AS total_count FROM ?? ${conditionStr}`;
+  let countParams = [table, ...conditionValues];
+  let countResult = await query(count_sql, countParams);
+  let totalCount = countResult[0].total_count;
+
+  return {
+    list,
+    totalCount,
+  };
 };
 
 // 使用示例
