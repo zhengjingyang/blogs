@@ -13,7 +13,8 @@ module.exports = {
       ctx.throw(400, error);
     }
   },
-  async findDataByPage(start, end, conditions, startTime, endTime) {
+  async findDataByPage(data) {
+    const { start, end, conditions, startTime, endTime } = { ...data };
     try {
       let result = await dbUtils.findDataByPage(
         "article",
