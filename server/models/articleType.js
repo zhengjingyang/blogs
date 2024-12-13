@@ -1,19 +1,13 @@
-const dbUtils = require('../utils/db-utils')
+const dbUtils = require("../utils/db-utils");
 module.exports = {
-    async findDataByPage (data) {
-        const { start, end, conditions} = { ...data };
-        try {
-            let result = await dbUtils.findDataByPage(
-              "article_type",
-              "*",
-              start,
-              end,
-              conditions
-            );
-            return result;
-          } catch (error) {
-            console.log(error, "error");
-            ctx.throw(error);
-          }
+  async findData(data) {
+    const { conditions } = { ...data };
+    try {
+      let result = await dbUtils.findData("article_type", "*", conditions);
+      return result;
+    } catch (error) {
+      console.log(error, "error");
+      ctx.throw(error);
     }
-}
+  },
+};

@@ -42,11 +42,7 @@ module.exports = {
     if (data.type) {
       params.conditions["type"] = data.type;
     }
-    let result = await articleModel.findDataByPage(
-      params.start,
-      params.end,
-      params.conditions
-    );
+    let result = await articleModel.findDataByPage(params);
     // console.log(result, "result");
 
     return {

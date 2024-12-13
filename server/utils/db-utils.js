@@ -37,13 +37,9 @@ let findDataById = function (table, id) {
   return query(_sql, [table, id]);
 };
 
-let findData = async function (
-  table,
-  keys,
-  conditions,
-  startTime,
-  endTime
-) {
+// 根据条件查询所有数据
+let findData = async function (data) {
+  let { table, keys, conditions, startTime, endTime } = { ...data };
   let conditionStr = "";
   let conditionValues = [];
 
@@ -92,15 +88,8 @@ let findData = async function (
   return list;
 };
 
-let findDataByPage = async function (
-  table,
-  keys,
-  start,
-  end,
-  conditions,
-  startTime,
-  endTime
-) {
+let findDataByPage = async function (data) {
+  let { table, keys, conditions, startTime, endTime, start, end } = { ...data };
   let conditionStr = "";
   let conditionValues = [];
 

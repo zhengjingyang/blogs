@@ -9,10 +9,12 @@ module.exports= {
             code: ""
         }
         let articleTypeResult = await articleTypeService.getList(fromData);
+        console.log(articleTypeResult, 'articleTypeResult');
+        
         if (articleTypeResult) {
             result.success = true;
             result.message = "获取成功";
-            result.data = articleTypeResult.data;
+            result.data = articleTypeResult;
             result.code = "200";
         } else {
             result.message = "获取失败";
