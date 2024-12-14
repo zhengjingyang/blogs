@@ -16,19 +16,19 @@ module.exports = {
   async findDataByPage(data) {
     const { start, end, conditions, startTime, endTime } = { ...data };
     try {
-      let result = await dbUtils.findDataByPage(
-        "article",
-        "*",
+      let result = await dbUtils.findDataByPage({
+        table: "article",
+        keys: "*",
         start,
         end,
         conditions,
         startTime,
         endTime
-      );
+      });
       return result;
     } catch (error) {
       console.log(error, "error");
       ctx.throw(error);
     }
-  },
+  }
 };

@@ -3,8 +3,6 @@ const articleService = require("../services/article");
 module.exports = {
   /**
    * 获取文章列表
-   * @param {Object} ctx - Koa 上下文对象
-   * @param {Object} ctx.request - 请求对象
    * @param {Object} ctx.request.body - 请求体中的表单数据
    * @returns {Object} - 操作结果
    */
@@ -19,7 +17,7 @@ module.exports = {
       code: "",
     };
     // 调用服务层的 getList 方法获取文章数据
-    let articleResult = await articleService.getList(formData);
+    let articleResult = await articleService.getList(formData || {});
     // 如果获取成功，设置操作结果
     if (articleResult) {
       result.success = true;
