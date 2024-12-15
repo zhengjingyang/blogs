@@ -39,7 +39,7 @@ const user = {
   async getOneByUserNameAndPassword(options) {    
     let _sql = `
     SELECT * from sys_user
-      where password="${options.password}" and username="${options.username}"
+      where password="${options.password}" and username="${options.username}" and del_flag != 1
       limit 1`;
     let result = await dbUtils.query(_sql);
     

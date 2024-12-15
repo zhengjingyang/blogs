@@ -7,6 +7,7 @@
     "start_server": "node ./server/app.js"
   },
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "dayjs": "^1.11.13",
     "debug": "^4.1.1",
     "ejs": "~2.3.3",

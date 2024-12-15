@@ -49,8 +49,8 @@ let findData = async function (data) {
       "WHERE " +
       Object.keys(conditions)
         .map((key) => {
-          conditionValues.push(conditions[key]);
-          return `${key} = ?`;
+          conditionValues.push(`%${conditions[key]}%`);
+          return `${key} LIKE ?`;
         })
         .join(" AND ");
   }

@@ -3,11 +3,14 @@ module.exports = {
   async findData(data) {
     const { conditions } = { ...data };
     try {
-      let result = await dbUtils.findData("article_type", "*", conditions);
+      let result = await dbUtils.findData({
+        table: "article_type",
+        keys: "*",
+        conditions
+      });
       return result;
     } catch (error) {
       console.log(error, "error");
-      ctx.throw(error);
     }
   },
   async addData(data) {
@@ -27,5 +30,5 @@ module.exports = {
       console.log(error, "error");
       ctx.throw(error);
     }
-  },
+  }
 };

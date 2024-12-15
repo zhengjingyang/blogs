@@ -45,6 +45,7 @@ module.exports= {
         let data = {
             name: fromData.name,
             type: fromData.type,
+            parent_id: fromData.parent_id || 0,
             created_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
             created_by: userObj.username,
             updated_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),

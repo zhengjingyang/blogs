@@ -11,6 +11,7 @@ const json = require("koa-json"); // 用来格式化 JSON 响应数据
 const onerror = require("koa-onerror"); // 统一处理应用中的错误
 const routers = require("./routers/index");
 const { koaBody } = require("koa-body");
+const cors = require('@koa/cors');
 
 require("./utils/global");
 
@@ -36,6 +37,9 @@ app.use(
 
 // 配置控制台日志中间件
 app.use(convert(koaLogger()));
+
+// 使用 @koa/cors 中间件来允许跨域请求
+app.use(cors());
 
 // 配置 koa-body 中间件
 app.use(koaBody({ multipart: true }));

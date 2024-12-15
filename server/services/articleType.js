@@ -4,11 +4,28 @@ module.exports = {
     let params = {
       conditions: {}
     };
-    if (data.name) {
+    if (data?.name) {
       params.conditions["name"] = data.name;
     }
     let result = await articleTypeModel.findData(params);
-    return result;
+    let treeList = this.listTrunTree(result);
+    return treeList;
+  },
+  listTrunTree(list) {
+    let treeList = [];
+    let map = {};
+    list.forEach((item) => {
+      map[item.id] = item;
+    });
+    list.forEach((item) => {
+      let parent = map[item.parent_id];
+      if (parent) {
+        (parent.children || (parent.children = [])).push(item);
+      } else {
+        treeList.push(item);
+      }
+    });
+    return treeList;
   },
   async add(data) {
     let result = await articleTypeModel.addData(data);
