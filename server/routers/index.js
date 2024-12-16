@@ -9,11 +9,12 @@ const article = require('./article.js')
 const file = require('./file.js')
 const error = require('./error.js')
 const articleType = require('./articleType.js')
-
+const dict = require('./dict.js')
 
 router.use('/user', user.routes(), user.allowedMethods())
 router.use('/article', article.routes(), article.allowedMethods())
 router.use('/file', file.routes(), file.allowedMethods())
 router.use('/articleType', articleType.routes(), articleType.allowedMethods())
+router.use('/dict', dict.routes(), dict.allowedMethods())
 router.use('/error', error.routes(), error.allowedMethods())
 module.exports = router

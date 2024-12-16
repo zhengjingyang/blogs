@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@koa/cors':
+        specifier: ^5.0.0
+        version: 5.0.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -55,7 +58,7 @@ importers:
         version: 5.0.0
       koa-views:
         specifier: ^6.2.0
-        version: 6.3.1(ejs@2.3.4)
+        version: 6.3.1(ejs@2.3.4)(lodash@4.17.21)
       minio:
         specifier: ^8.0.2
         version: 8.0.2
@@ -88,6 +91,10 @@ packages:
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
+
+  '@koa/cors@5.0.0':
+    resolution: {integrity: sha512-x/iUDjcS90W69PryLDIMgFyV21YLTnG9zOpPXS7Bkt2b8AsY3zZsIpOLBkYr9fBcF3HbkKaER5hOBZLfpLgYNw==}
+    engines: {node: '>= 14.0.0'}
 
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
@@ -1950,6 +1957,10 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
+  '@koa/cors@5.0.0':
+    dependencies:
+      vary: 1.1.2
+
   '@one-ini/wasm@0.1.1': {}
 
   '@pkgjs/parseargs@0.11.0':
@@ -2320,10 +2331,12 @@ snapshots:
       write-file-atomic: 2.4.3
       xdg-basedir: 3.0.0
 
-  consolidate@0.15.1(ejs@2.3.4):
+  consolidate@0.15.1(ejs@2.3.4)(lodash@4.17.21):
     dependencies:
       bluebird: 3.7.2
+    optionalDependencies:
       ejs: 2.3.4
+      lodash: 4.17.21
 
   content-disposition@0.5.4:
     dependencies:
@@ -2363,11 +2376,13 @@ snapshots:
   debug@2.6.9(supports-color@5.5.0):
     dependencies:
       ms: 2.0.0
+    optionalDependencies:
       supports-color: 5.5.0
 
   debug@3.2.7(supports-color@5.5.0):
     dependencies:
       ms: 2.1.3
+    optionalDependencies:
       supports-color: 5.5.0
 
   debug@4.4.0:
@@ -2986,9 +3001,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  koa-views@6.3.1(ejs@2.3.4):
+  koa-views@6.3.1(ejs@2.3.4)(lodash@4.17.21):
     dependencies:
-      consolidate: 0.15.1(ejs@2.3.4)
+      consolidate: 0.15.1(ejs@2.3.4)(lodash@4.17.21)
       debug: 4.4.0
       get-paths: 0.0.7
       koa-send: 5.0.1
