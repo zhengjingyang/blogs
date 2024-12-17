@@ -36,6 +36,27 @@ let findDataById = function (table, id) {
   let _sql = "SELECT * FROM ?? WHERE id = ?";
   return query(_sql, [table, id]);
 };
+let findDataByConditions = function (table, conditions) {
+  let conditionStr = "";
+  let conditionValues = [];
+
+  // 动态生成 WHERE 子句
+  if (conditions && Object.keys(conditions).length > 0) {
+    conditionStr =
+      "WHERE " +
+      Object.keys(conditions)
+        .map((key) => {
+          conditionValues.push(conditions[key]);
+          return `${key} = ?`;
+        })
+        .join(" AND ");
+  }
+
+  let _sql = `SELECT * FROM ?? ${conditionStr}`;
+  let params = [table, ...conditionValues];
+
+  return query(_sql, params);
+};
 
 // 根据条件查询所有数据
 let findData = async function (data) {
@@ -181,6 +202,7 @@ module.exports = {
   query,
   createTable,
   findDataById,
+  findDataByConditions,
   findData,
   findDataByPage,
   deleteDataById,

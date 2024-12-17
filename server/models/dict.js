@@ -19,7 +19,7 @@ module.exports = {
       return false;
     }
   },
-  async edit(model, id) {
+  async updateDict(model, id) {
     try {
       let result = await dbUtils.updateData("sys_dict", model, id);
       return result;
@@ -27,9 +27,24 @@ module.exports = {
       console.log(error);
     }
   },
-  async delete(id) {
+  async updateDictItem(models) {
+    let num = 0;
+    for (let item of models) {
+      let result = await dbUtils.updateData("sys_dict_item", item, item.id);
+      if (result.affectedRows > 0) {
+        num++;
+      }
+    }
+
+    if (num === models.length) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  async deleteDict(id) {
     try {
-      let result = await dbUtils.deleteDataById("sys_dict", id);
+      let result = await dbUtils.updateData("sys_dict", id);
       return result;
     } catch (error) {
       console.log(error);
@@ -41,6 +56,12 @@ module.exports = {
       keys: "*",
       ...data,
     });
+    return result;
+  },
+  async getDictDataById(params) {
+    let result = await dbUtils.findDataByConditions("sys_dict_item", params);
+    // console.log(result);
+
     return result;
   },
 };
