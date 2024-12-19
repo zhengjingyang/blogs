@@ -52,4 +52,13 @@ module.exports = {
       totalCount: result.totalCount,
     };
   },
+  /**
+   * 获取文章详情
+   * @param {string} id - 要获取的文章的唯一标识符
+   * @returns {Object} - 文章详情
+   */
+  async getDetail(id) {
+    let result = await articleModel.getDetail(id);
+    return result;
+  },
 };

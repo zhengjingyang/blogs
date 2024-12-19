@@ -8,11 +8,11 @@ const config = {
     HOST: "124.70.135.97",
   },
   minio: {
-    HOST: "192.168.231.19",
+    HOST: "124.70.135.97",
     PORT: 9002,
     USESSL: false,
     ACCESSKEY: "admin",
-    SECRETKEY: "P@ssw0rd_2023",
+    SECRETKEY: "password@2024",
   },
 };
 

@@ -22,10 +22,9 @@ module.exports = {
     const now = dayjs();
     const year = now.year();
     const month = now.format("MM"); // 格式化月为两位数
-    const day = now.format("DD"); // 格式化日为两位数
     // 创建文件路径：按年/月/日分组
-    const bucketName = "test";
-    const folderPath = `${year}/${month}/${day}`;
+    const bucketName = "blogs";
+    const folderPath = `${year}/${month}`;
     const objectName = `${folderPath}/${nanoid()}-${
       file.originalFilename || file.name
     }`;
@@ -41,8 +40,9 @@ module.exports = {
 
       ctx.body = {
         success: true,
+        code: 200,
         message: "File uploaded successfully",
-        url: `${protocol}://${endPoint}:${port}/${bucketName}/${objectName}`,
+        data: `${protocol}://${endPoint}:${port}/${bucketName}/${objectName}`,
       };
     } catch (error) {
       console.error("File upload error:", error);

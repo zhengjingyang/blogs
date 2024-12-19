@@ -50,8 +50,9 @@ module.exports = {
       title: Joi.string().required(),
       content: Joi.string(),
       img: Joi.string(),
-      described: Joi.string(),
-      type: Joi.string(),
+      described: Joi.string().required(),
+      type: Joi.number().required(),
+      type_name: Joi.string().required(),
     }).validate(formData);
     // 如果验证失败，抛出错误
     if (schema.error) {
@@ -81,9 +82,12 @@ module.exports = {
       result.success = true;
       result.message = "添加成功";
       result.code = 200;
+      result.data = articleResult.insertId;
     } else {
       // 如果添加失败，设置错误信息
       result.message = "添加失败";
+      result.code = 400;
+      result.data = null;
     }
     // 返回操作结果
     ctx.body = result;
@@ -114,9 +118,11 @@ module.exports = {
       // 文章图片
       img: Joi.string(),
       // 文章描述
-      described: Joi.string(),
+      described: Joi.string().required(),
       // 文章类型
-      type: Joi.string(),
+      type: Joi.number().required(),
+      // 文章类型名称
+      type_name: Joi.string().required(),
     }).validate(formData);
     // 如果验证失败，抛出错误
     if (schema.error) {
@@ -203,6 +209,36 @@ module.exports = {
       result.code = 400;
     } else {
       result.message = "删除失败";
+    }
+    ctx.body = result;
+  },
+
+  /**
+   * 获取文章详情
+   */
+  async detail(ctx) {
+    let formData = ctx.query;
+    const schema = Joi.object({
+      id: Joi.number().required(),
+    }).validate(formData);
+    if (schema.error) {
+      ctx.throw(400, schema.error.details[0].message);
+      return;
+    }
+    let result = {
+      success: false,
+      message: "",
+      data: null,
+      code: "",
+    };
+    let articleResult = await articleService.getDetail(formData.id);
+    if (articleResult) {
+      result.success = true;
+      result.message = "获取成功";
+      result.code = 200;
+      result.data = articleResult;
+    } else {
+      result.message = "获取失败";
     }
     ctx.body = result;
   },

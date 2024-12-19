@@ -18,7 +18,7 @@ module.exports = {
     try {
       let result = await dbUtils.findDataByPage({
         table: "article",
-        keys: "*",
+        keys: ["id", "title", "type", "type_name", "created_time", "updated_time"],
         start,
         end,
         conditions,
@@ -30,5 +30,14 @@ module.exports = {
       console.log(error, "error");
       ctx.throw(error);
     }
-  }
+  },
+  async getDetail(id) {
+    try {
+      let result = await dbUtils.findDataById("article", id);
+      return result;
+    } catch (error) {
+      console.log(error);
+      ctx.throw(400, error);
+    }
+  },
 };
