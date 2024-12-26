@@ -14,6 +14,11 @@ const config = {
     ACCESSKEY: "admin",
     SECRETKEY: "password@2024",
   },
+  redis: {
+    HOST: "124.70.135.97",
+    PORT: 6379,
+    PASSWORD: "password@2024",
+  },
 };
 
 module.exports = config;

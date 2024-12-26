@@ -172,6 +172,8 @@ module.exports = {
       result.message = "更新失败";
       result.code = 500;
     }
+    // 添加这一行
+    ctx.body = result;
   },
   async delete(ctx) {
     let queryData = ctx.query;
@@ -188,7 +190,7 @@ module.exports = {
       updated_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       updated_by: ctx.state.user.userInfo.username,
     }
-    let result = dictService.edit(data);
+    let result = await dictService.edit(data);
     if (result) {
       ctx.body = {
         success: true,

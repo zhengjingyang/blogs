@@ -11,7 +11,7 @@ const json = require("koa-json"); // 用来格式化 JSON 响应数据
 const onerror = require("koa-onerror"); // 统一处理应用中的错误
 const routers = require("./routers/index");
 const { koaBody } = require("koa-body");
-const cors = require('@koa/cors');
+const cors = require("@koa/cors");
 
 require("./utils/global");
 
@@ -19,9 +19,9 @@ const app = new Koa();
 
 // 配置 Redis 连接
 const redisOptions = {
-  host: "124.70.135.97",
-  port: 6379, // Redis 默认端口
-  password: "password@2024", // 如果没有设置密码，这行可以省略
+  host: config.redis.HOST,
+  port: config.redis.PORT,
+  password: config.redis.PASSWORD,
 };
 // 配置session中间件
 app.use(
@@ -75,6 +75,17 @@ app.use(async (ctx, next) => {
   await next();
   const ms = new Date() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
+
+// 错误处理
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = err.status || 500;
+    ctx.body = { error: err.message };
+    ctx.app.emit("error", err, ctx); // 触发错误事件
+  }
 });
 
 // 监听启动端口
